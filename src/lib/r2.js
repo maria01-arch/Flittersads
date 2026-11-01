@@ -18,6 +18,10 @@ function client() {
       region: 'auto',
       endpoint: 'https://' + process.env.R2_ACCOUNT_ID + '.r2.cloudflarestorage.com',
       credentials: { accessKeyId: process.env.R2_ACCESS_KEY_ID, secretAccessKey: process.env.R2_SECRET_ACCESS_KEY },
+      // Newer SDK versions add extra checksum fields to upload links that R2
+      // rejects. Only use checksums when a request really needs one.
+      requestChecksumCalculation: 'WHEN_REQUIRED',
+      responseChecksumValidation: 'WHEN_REQUIRED',
     })
   }
   return s3
