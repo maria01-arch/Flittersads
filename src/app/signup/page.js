@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { getBrowserClient } from '@/lib/supabase/browser'
+import AuthShell from '@/components/AuthShell'
 
 function randomName() {
   const bytes = new Uint8Array(4)
@@ -49,35 +50,32 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="login">
-      <div className="login-box">
-        <h1 className="login-title">Flitters Ads</h1>
-        {sent ? (
-          <>
-            <h2 className="step-title">Check your email</h2>
-            <p>We sent a link to <strong>{email}</strong>. Open it to confirm your address, then sign in.</p>
-            <a className="btn btn-primary btn-wide" href="/login">Go to sign in</a>
-          </>
-        ) : exists ? (
-          <>
-            <h2 className="step-title">You already have an account</h2>
-            <p>That email is already registered with Flitters. Sign in with your Flitters password and we will set up your business next.</p>
-            <a className="btn btn-primary btn-wide" href="/login">Sign in</a>
-          </>
-        ) : (
-          <>
-            <p className="lead">Create an advertiser account.</p>
-            {error ? <p className="err" role="alert">{error}</p> : null}
-            <form onSubmit={onSubmit} className="stack">
-              <label className="field"><span>Email</span><input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
-              <label className="field"><span>Password (8 or more characters)</span><input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
-              <label className="field"><span>Password again</span><input type="password" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} required /></label>
-              <button type="submit" className="btn btn-primary btn-wide" disabled={busy}>{busy ? 'Creating…' : 'Create account'}</button>
-            </form>
-            <p className="hint">Already have an account? <a href="/login">Sign in</a>.</p>
-          </>
-        )}
-      </div>
-    </div>
+    <AuthShell>
+      {sent ? (
+        <>
+          <h2>Check your email</h2>
+          <p>We sent a link to <strong>{email}</strong>. Open it to confirm your address, then sign in.</p>
+          <a className="btn btn-primary btn-wide" href="/login">Go to sign in</a>
+        </>
+      ) : exists ? (
+        <>
+          <h2>You already have an account</h2>
+          <p>That email is already registered with Flitters. Sign in with your Flitters password and we will set up your business next.</p>
+          <a className="btn btn-primary btn-wide" href="/login">Sign in</a>
+        </>
+      ) : (
+        <>
+          <h2>Create your account</h2>
+          {error ? <p className="err" role="alert">{error}</p> : null}
+          <form onSubmit={onSubmit} className="stack">
+            <label className="field"><span>Email</span><input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
+            <label className="field"><span>Password <small>(8 or more characters)</small></span><input type="password" autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
+            <label className="field"><span>Password again</span><input type="password" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} required /></label>
+            <button type="submit" className="btn btn-primary btn-wide" disabled={busy}>{busy ? 'Creating…' : 'Create account'}</button>
+          </form>
+          <p className="hint">Already have an account? <a href="/login">Sign in</a></p>
+        </>
+      )}
+    </AuthShell>
   )
 }

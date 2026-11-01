@@ -1,6 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import { getBrowserClient } from '@/lib/supabase/browser'
+import AuthShell from '@/components/AuthShell'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -30,20 +31,17 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="login">
-      <div className="login-box">
-        <h1 className="login-title">Flitters Ads</h1>
-        <p className="lead">Reach people on Flitters. Sign in to manage your ads.</p>
-        {notice ? <p className="note">{notice}</p> : null}
-        {error ? <p className="err" role="alert">{error}</p> : null}
-        <form onSubmit={onSubmit} className="stack">
-          <label className="field"><span>Email</span><input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
-          <label className="field"><span>Password</span><input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
-          <button type="submit" className="btn btn-primary btn-wide" disabled={busy}>{busy ? 'Checking…' : 'Sign in'}</button>
-        </form>
-        <p className="hint">New here? <a href="/signup">Create an advertiser account</a>.</p>
-        <p className="hint">Already use Flitters? Your Flitters email and password work here too.</p>
-      </div>
-    </div>
+    <AuthShell>
+      <h2>Welcome back</h2>
+      {notice ? <p className="note">{notice}</p> : null}
+      {error ? <p className="err" role="alert">{error}</p> : null}
+      <form onSubmit={onSubmit} className="stack">
+        <label className="field"><span>Email</span><input type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
+        <label className="field"><span>Password</span><input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
+        <button type="submit" className="btn btn-primary btn-wide" disabled={busy}>{busy ? 'Checking…' : 'Sign in'}</button>
+      </form>
+      <p className="hint">New here? <a href="/signup">Create an advertiser account</a></p>
+      <p className="hint">Already use Flitters? Your Flitters email and password work here too.</p>
+    </AuthShell>
   )
 }

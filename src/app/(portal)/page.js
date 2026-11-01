@@ -1,13 +1,8 @@
 import { getAdvertiserContext } from '@/lib/advertiser'
 import { createAdminClient } from '@/lib/supabase/admin'
-import { countryName } from '@/lib/countries'
+import Icon from '@/components/Icon'
 
 export const dynamic = 'force-dynamic'
-
-const LABEL = {
-  draft: 'Draft', awaiting_payment: 'Awaiting payment', pending_review: 'In review', approved: 'Approved',
-  live: 'Live', paused: 'Paused', completed: 'Completed', rejected: 'Needs changes', refunded: 'Refunded', cancelled: 'Cancelled',
-}
 
 export default async function Dashboard() {
   const ctx = await getAdvertiserContext()
@@ -16,33 +11,27 @@ export default async function Dashboard() {
 
   const admin = createAdminClient()
   const { data: rows } = await admin.from('ad_campaigns').select('status').eq('advertiser_id', adv.id)
-  const counts = {}
-  ;(rows || []).forEach((r) => { counts[r.status] = (counts[r.status] || 0) + 1 })
+  const n = (...st) => (rows || []).filter((r) => st.includes(r.status)).length
   const total = (rows || []).length
 
   return (
     <>
-      <h1>Welcome, {adv.business_name}</h1>
-      <p className="lead">Run ads in the Flitters feed and Reels. You pay up front, we review within 24 hours, then your ad goes live on its start date.</p>
+      <section className="hero">
+        <h1>{total === 0 ? 'Ready to reach people on Flitters?' : 'Welcome back, ' + adv.business_name}</h1>
+        <p>Pick feed or Reels, add your picture or video, choose your dates, and we do the rest. We review within 24 hours.</p>
+        <a className="btn" href="/create"><Icon name="plus" />Create a campaign</a>
+      </section>
 
-      <section className="card">
-        <h2>Your campaigns</h2>
-        {total === 0 ? (
-          <p>No campaigns yet. Creating campaigns arrives in the next update.</p>
-        ) : (
-          <ul className="chips">
-            {Object.entries(counts).map(([s, n]) => <li key={s} className="chip">{LABEL[s] || s}: {n}</li>)}
-          </ul>
-        )}
+      <section className="stats" aria-label="Your campaigns">
+        <div className="stat"><strong>{n('live')}</strong><span>Live now</span></div>
+        <div className="stat"><strong>{n('pending_review', 'approved')}</strong><span>In review or scheduled</span></div>
+        <div className="stat"><strong>{n('draft', 'awaiting_payment', 'rejected')}</strong><span>Need your attention</span></div>
+        <div className="stat"><strong>{n('completed')}</strong><span>Finished</span></div>
       </section>
 
       <section className="card">
-        <h2>Your business</h2>
-        <dl className="kv">
-          <dt>Name</dt><dd>{adv.business_name}</dd>
-          <dt>Country</dt><dd>{countryName(adv.country_code)}</dd>
-          <dt>Contact email</dt><dd>{adv.contact_email}</dd>
-        </dl>
+        <div className="spread"><h2>Your campaigns</h2><a href="/campaigns">See all</a></div>
+        {total === 0 ? <p className="hint">Nothing here yet. Your first campaign takes about three minutes.</p> : <p className="hint">You have {total} campaign{total === 1 ? '' : 's'}.</p>}
       </section>
     </>
   )
