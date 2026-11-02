@@ -50,7 +50,7 @@ export default function OnboardingClient({ email, countries }) {
         <label className="field"><span>Contact email <small>(receipts and ad decisions)</small></span><input type="email" value={contact} onChange={(e) => setContact(e.target.value)} required /></label>
         <label className="check">
           <input type="checkbox" checked={agree} onChange={(e) => setAgree(e.target.checked)} />
-          <span>I agree to the Flitters Ads terms and ad policy, and I confirm I am allowed to advertise for this business.</span>
+          <span>I agree to the Flitters Ads <a href="/terms" target="_blank" rel="noreferrer">terms</a> and <a href="/ad-policy" target="_blank" rel="noreferrer">ad policy</a>, and I confirm I am allowed to advertise for this business.</span>
         </label>
         <button type="submit" className="btn btn-primary btn-wide" disabled={busy || !agree}>{busy ? 'Saving…' : 'Continue'}</button>
       </form>

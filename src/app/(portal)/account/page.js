@@ -23,6 +23,11 @@ export default async function AccountPage() {
         </dl>
         <p className="hint">Your country sets the currency and price you pay.</p>
       </section>
+      <section className="card">
+        <h2>Policies</h2>
+        <p className="row"><a href="/terms">Terms</a><a href="/ad-policy">Ad policy</a><a href="/refunds">Refunds</a><a href="/privacy">Privacy</a></p>
+        {process.env.NEXT_PUBLIC_SUPPORT_EMAIL ? <p className="hint">Need help? Email {process.env.NEXT_PUBLIC_SUPPORT_EMAIL}</p> : null}
+      </section>
       <SignOutButton />
     </>
   )

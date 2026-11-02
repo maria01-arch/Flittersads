@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { getAdvertiserContext } from '@/lib/advertiser'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { rateLimited } from '@/lib/rateLimit'
+import { completeness } from '@/lib/campaignRules'
 import { ownsKey, verifyImage, verifyVideo, publicUrlFor, ownedKeyFromUrl, deleteObject } from '@/lib/r2'
 
 export const runtime = 'nodejs'
@@ -22,6 +23,7 @@ export async function POST(req) {
   try {
     if (body.action === 'save') return await save(ctx, admin, body)
     if (body.action === 'cancel') return await cancel(ctx, admin, body)
+    if (body.action === 'resubmit') return await resubmit(ctx, admin, body)
     return json(400, { error: 'Unknown action' })
   } catch (err) {
     console.error('Campaign route failed:', err)
@@ -100,6 +102,8 @@ async function save(ctx, admin, body) {
     row.start_at = sd ? sd + 'T00:00:00.000Z' : null
     row.days = d
     row.end_at = sd && d ? new Date(Date.parse(sd + 'T00:00:00.000Z') + d * 86400000).toISOString() : null
+    // The price is worked out again when the person pays, so an old one never sticks.
+    Object.assign(row, { country_code: null, currency: null, price_rule_id: null, price_per_day_minor: null, subtotal_minor: null, vat_percent: null, vat_minor: null, total_minor: null })
   }
 
   const res = existing
@@ -124,5 +128,18 @@ async function cancel(ctx, admin, body) {
   if (c.status !== 'draft') return json(400, { error: 'Only a draft can be deleted' })
   const { error } = await admin.from('ad_campaigns').update({ status: 'cancelled' }).eq('id', c.id).eq('advertiser_id', ctx.advertiser.id)
   if (error) return json(500, { error: 'Could not delete. Try again.' })
+  return json(200, { ok: true })
+}
+
+// A rejected (already paid) campaign goes back to review after the fixes.
+async function resubmit(ctx, admin, body) {
+  const c = await loadOwn(admin, ctx.advertiser, body.id)
+  if (!c) return json(404, { error: 'Campaign not found' })
+  if (c.status !== 'rejected' || !c.paid_at) return json(400, { error: 'This campaign can’t be sent again' })
+  const problem = completeness(c, { needFutureStart: false })
+  if (problem) return json(400, { error: problem })
+  if (new Date(c.end_at) <= new Date()) return json(400, { error: 'The dates for this campaign have passed. Please ask for a refund instead.' })
+  const { error } = await admin.from('ad_campaigns').update({ status: 'pending_review' }).eq('id', c.id).eq('advertiser_id', ctx.advertiser.id).eq('status', 'rejected')
+  if (error) return json(500, { error: 'Could not send it for review. Try again.' })
   return json(200, { ok: true })
 }

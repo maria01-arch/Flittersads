@@ -138,6 +138,32 @@ export default function CampaignBuilder({ initial, business, countryLabel, stora
     }
   }
 
+  async function pay() {
+    setBusy(true)
+    setError('')
+    try {
+      const c = await save()
+      if (locked) {
+        const res = await fetch('/api/campaigns', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ action: 'resubmit', id: c.id }) })
+        const j = await res.json().catch(() => ({}))
+        if (!res.ok) throw new Error(j.error || 'Could not send it for review')
+        window.location.href = '/campaigns/' + c.id + '?pay=resubmitted'
+        return
+      }
+      const res = await fetch('/api/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ campaignId: c.id }) })
+      const j = await res.json().catch(() => ({}))
+      if (res.status === 401) {
+        window.location.href = '/login'
+        return
+      }
+      if (!res.ok) throw new Error(j.error || 'Could not start the payment')
+      window.location.href = j.url
+    } catch (e) {
+      setError(e.message)
+      setBusy(false)
+    }
+  }
+
   async function finishLater() {
     setBusy(true)
     setError('')
@@ -355,7 +381,9 @@ export default function CampaignBuilder({ initial, business, countryLabel, stora
                 <ul className="todo">
                   {todo.map(([ok, label]) => <li key={label} className={ok ? '' : 'bad'}><Icon name={ok ? 'check' : 'alert'} />{label}</li>)}
                 </ul>
-                <p className="hint">Your campaign is saved as a draft. Paying and sending it for review opens in the next update. We review every ad within 24 hours.</p>
+                <p className="hint">{locked ? 'Your fixes are saved. Send it for review again when you are ready.' : 'You pay securely with Paystack. We review every ad within 24 hours, and your ad goes live on its start date once approved.'}</p>
+                <p className="hint">By {locked ? 'sending this' : 'paying'} you agree to the <a href="/terms" target="_blank" rel="noreferrer">terms</a>, <a href="/ad-policy" target="_blank" rel="noreferrer">ad policy</a> and <a href="/refunds" target="_blank" rel="noreferrer">refund policy</a>.</p>
+                <button type="button" className="btn btn-wide" onClick={finishLater} disabled={busy}>Save and finish later</button>
               </>
             ) : null}
           </div>
@@ -376,7 +404,9 @@ export default function CampaignBuilder({ initial, business, countryLabel, stora
         {step < 3 ? (
           <button type="button" className="btn btn-primary" onClick={next} disabled={busy || uploading}>{busy ? 'Saving…' : 'Continue'}</button>
         ) : (
-          <button type="button" className="btn btn-primary" onClick={finishLater} disabled={busy || !ready}>{busy ? 'Saving…' : 'Save draft'}</button>
+          <button type="button" className="btn btn-primary" onClick={pay} disabled={busy || !ready || (!locked && !(shownQuote && !shownQuote.error))}>
+            {busy ? 'Please wait…' : locked ? 'Send for review again' : shownQuote && !shownQuote.error ? 'Pay ' + money(shownQuote.total_minor, shownQuote.currency) : 'Pay'}
+          </button>
         )}
       </div>
     </>

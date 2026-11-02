@@ -234,3 +234,25 @@ a { color: var(--brand); text-decoration: none; font-weight: 600; }
 @keyframes slide { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: none; } }
 @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* legal pages + invoice */
+.legal { min-height: 100dvh; }
+.legal-bar { padding: 14px 20px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.legal-body { max-width: 760px; margin: 0 auto; padding: 28px 20px 80px; display: grid; gap: 18px; }
+.legal-body h2 { font-size: 18px; margin-top: 8px; }
+.legal-body p, .legal-body li { color: var(--ink); }
+.legal-body ul { margin: 0; padding-left: 20px; display: grid; gap: 6px; }
+.invoice { max-width: 720px; margin: 0 auto; padding: 28px 20px 60px; display: grid; gap: 22px; background: var(--surface); min-height: 100dvh; }
+.invoice .right { text-align: right; }
+.inv-table { width: 100%; border-collapse: collapse; }
+.inv-table th { text-align: left; color: var(--muted); font-size: 13px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.inv-table th.right { text-align: right; }
+.inv-table td { padding: 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; }
+.inv-table td.right { text-align: right; white-space: nowrap; }
+.inv-table small { color: var(--muted); }
+.inv-total td { font-weight: 800; font-size: 18px; border-bottom: 0; }
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff; color: #000; }
+  .invoice { padding: 0; }
+}

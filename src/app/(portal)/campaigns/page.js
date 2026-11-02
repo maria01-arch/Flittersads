@@ -1,6 +1,7 @@
 import { getAdvertiserContext } from '@/lib/advertiser'
 import { createAdminClient } from '@/lib/supabase/admin'
 import { day } from '@/lib/format'
+import { statsByCampaign } from '@/lib/stats'
 import StatusPill from '@/components/StatusPill'
 import Icon from '@/components/Icon'
 
@@ -12,6 +13,7 @@ export default async function CampaignsPage() {
   const admin = createAdminClient()
   const { data } = await admin.from('ad_campaigns').select('*').eq('advertiser_id', ctx.advertiser.id).neq('status', 'cancelled').order('created_at', { ascending: false }).limit(100)
   const rows = data || []
+  const stats = await statsByCampaign(admin, rows.map((c) => c.id))
 
   return (
     <>
@@ -33,6 +35,7 @@ export default async function CampaignsPage() {
               <div className="camp-body">
                 <strong>{c.name}</strong>
                 <small>{c.placement === 'reel' ? 'Reels' : 'Feed'}{c.start_at ? ' · ' + day(c.start_at) : ''}{c.days ? ' · ' + c.days + ' days' : ''}</small>
+                {stats.get(c.id) ? <small>{stats.get(c.id).impressions.toLocaleString('en')} views · {stats.get(c.id).clicks.toLocaleString('en')} clicks</small> : null}
                 <span><StatusPill status={c.status} /></span>
               </div>
             </a>
