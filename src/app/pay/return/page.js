@@ -9,7 +9,7 @@ export const dynamic = 'force-dynamic'
 export default async function PayReturn({ searchParams }) {
   const ctx = await getAdvertiserContext()
   if (ctx.error === 'signed_out') redirect('/login')
-  if (ctx.error) redirect('/')
+  if (ctx.error) redirect('/dashboard')
   const ref = String((searchParams && (searchParams.reference || searchParams.trxref)) || '')
   if (!/^FA_[A-Za-z0-9]{8,60}$/.test(ref)) redirect('/campaigns')
 

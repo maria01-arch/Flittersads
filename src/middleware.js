@@ -3,7 +3,8 @@ import { NextResponse } from 'next/server'
 
 // Keeps the session fresh and sends signed-out visitors to /login.
 // Every page and API route also checks on the server.
-const PUBLIC = ['/login', '/signup', '/auth/', '/api/webhooks/', '/terms', '/ad-policy', '/privacy', '/refunds']
+const EXACT = ['/']
+const PREFIX = ['/login', '/signup', '/auth', '/terms', '/ad-policy', '/privacy', '/refunds']
 
 export async function middleware(request) {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL
@@ -28,7 +29,7 @@ export async function middleware(request) {
 
   const { data } = await supabase.auth.getUser()
   const path = request.nextUrl.pathname
-  const open = PUBLIC.some((p) => path === p || path.startsWith(p.endsWith('/') ? p : p + '/'))
+  const open = EXACT.includes(path) || PREFIX.some((p) => path === p || path.startsWith(p + '/'))
   if (!data?.user && !open && !path.startsWith('/api/')) {
     const to = request.nextUrl.clone()
     to.pathname = '/login'

@@ -27,7 +27,7 @@ export default function LoginPage() {
       setBusy(false)
       return
     }
-    window.location.href = '/'
+    window.location.href = '/dashboard'
   }
 
   return (

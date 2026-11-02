@@ -10,8 +10,8 @@ export const runtime = 'nodejs'
 export async function GET(request) {
   const { searchParams, origin } = new URL(request.url)
   const code = searchParams.get('code')
-  let next = searchParams.get('next') || '/'
-  if (!next.startsWith('/') || next.startsWith('//')) next = '/'
+  let next = searchParams.get('next') || '/dashboard'
+  if (!next.startsWith('/') || next.startsWith('//')) next = '/dashboard'
   if (code) {
     try {
       const supabase = createClient()

@@ -12,7 +12,7 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 export default async function InvoicePage({ params }) {
   const ctx = await getAdvertiserContext()
   if (ctx.error === 'signed_out') redirect('/login')
-  if (ctx.error) redirect('/')
+  if (ctx.error) redirect('/dashboard')
   if (!UUID.test(params.id)) notFound()
   const adv = ctx.advertiser
   const admin = createAdminClient()

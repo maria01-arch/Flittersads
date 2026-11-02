@@ -17,5 +17,5 @@ export default async function PortalLayout({ children }) {
       </AuthShell>
     )
   }
-  return <Shell business={ctx.advertiser.business_name}>{children}</Shell>
+  return <Shell business={ctx.advertiser.business_name} email={ctx.user.email}>{children}</Shell>
 }

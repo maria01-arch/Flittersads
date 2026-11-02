@@ -26,7 +26,7 @@ export default function OnboardingClient({ email, countries }) {
         return
       }
       if (!res.ok) throw new Error(j.error || 'Something went wrong')
-      window.location.href = '/'
+      window.location.href = '/dashboard'
     } catch (err) {
       setError(err.message)
       setBusy(false)

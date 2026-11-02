@@ -13,6 +13,7 @@ const PATHS = {
   upload: 'M12 16V4M7 9l5-5 5 5M4 20h16',
   calendar: 'M4 6h16v14H4zM4 10h16M8 3v4M16 3v4',
   feed: 'M5 4h14v16H5zM5 9h14M8 13h8M8 16h5',
+  receipt: 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6',
   megaphone: 'M3 10v4l11 5V5L3 10ZM14 8a4 4 0 0 1 0 8M6 15v5',
 }
 

@@ -1,11 +1,11 @@
-import { Plus_Jakarta_Sans } from 'next/font/google'
+import { Archivo } from 'next/font/google'
 import './globals.css'
 
-const font = Plus_Jakarta_Sans({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
+const font = Archivo({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
 
 export const metadata = {
-  title: 'Flitters Ads',
-  description: 'Advertise on Flitters',
+  title: 'Flitters Ads: advertise on Flitters',
+  description: 'Create an ad in minutes, pay by the day, and reach people in the Flitters feed and Reels.',
 }
 
 export const viewport = {
