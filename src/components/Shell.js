@@ -3,6 +3,7 @@ import { useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import { getBrowserClient } from '@/lib/supabase/browser'
 import Icon from '@/components/Icon'
+import Logo from '@/components/Logo'
 
 const IDLE_MS = 60 * 60 * 1000
 const NAV = [
@@ -39,7 +40,7 @@ export default function Shell({ business, email, children }) {
   return (
     <div className="shell">
       <aside className="side">
-        <a className="brand" href="/dashboard"><span className="logo-mark">F</span>Flitters <b>Ads</b></a>
+        <a className="brand" href="/dashboard"><Logo />Flitters <b>Ads</b></a>
         <a className="btn btn-accent btn-wide" href="/create"><Icon name="plus" />Create campaign</a>
         <nav className="side-nav" aria-label="Sections">
           {NAV.map(([href, label, icon]) => (
@@ -50,7 +51,7 @@ export default function Shell({ business, email, children }) {
       </aside>
       <div className="main-col">
         <header className="appbar">
-          <a className="brand" href="/dashboard"><span className="logo-mark">F</span>Flitters <b>Ads</b></a>
+          <a className="brand" href="/dashboard"><Logo />Flitters <b>Ads</b></a>
           <span className="chipbiz">{business}</span>
         </header>
         <main className="page">{children}</main>

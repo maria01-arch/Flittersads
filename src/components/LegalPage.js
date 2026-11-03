@@ -1,8 +1,10 @@
+import Logo from '@/components/Logo'
+
 export default function LegalPage({ title, updated, sections }) {
   const support = process.env.NEXT_PUBLIC_SUPPORT_EMAIL
   return (
     <div className="legal">
-      <header className="legal-bar"><a className="brand" href="/"><span className="logo-mark">F</span>Flitters <b>Ads</b></a></header>
+      <header className="legal-bar"><a className="brand" href="/"><Logo />Flitters <b>Ads</b></a></header>
       <main className="legal-body">
         <span className="pill pill-warn">Draft: a lawyer must review this before launch</span>
         <h1>{title}</h1>
