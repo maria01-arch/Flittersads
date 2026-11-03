@@ -16,7 +16,7 @@ export default function AuthShell({ children }) {
         </div>
       </aside>
       <main className="auth-main">
-        <div className="auth-card">{children}</div>
+        <div className="auth-card"><a className="auth-back" href="/">← Back to home</a>{children}</div>
       </main>
     </div>
   )

@@ -66,6 +66,7 @@ export default function SignupPage() {
       ) : (
         <>
           <h2>Create your account</h2>
+          <p className="hint">Already have an account? <a href="/login">Sign in</a></p>
           {error ? <p className="err" role="alert">{error}</p> : null}
           <form onSubmit={onSubmit} className="stack">
             <label className="field"><span>Email</span><input type="email" autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} required /></label>
@@ -73,7 +74,6 @@ export default function SignupPage() {
             <label className="field"><span>Password again</span><input type="password" autoComplete="new-password" value={again} onChange={(e) => setAgain(e.target.value)} required /></label>
             <button type="submit" className="btn btn-primary btn-wide" disabled={busy}>{busy ? 'Creating…' : 'Create account'}</button>
           </form>
-          <p className="hint">Already have an account? <a href="/login">Sign in</a></p>
         </>
       )}
     </AuthShell>

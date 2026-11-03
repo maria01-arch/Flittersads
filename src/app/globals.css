@@ -445,3 +445,11 @@ a { color: var(--blue); text-decoration: none; font-weight: 600; }
 .idea .top.b5 { background: #1f4fd8; color: #fff; }
 .lp-sec.dark .idea { border: 1px solid #2a2a32; }
 .lp-badge { display: inline-block; background: #e6f0ff; color: #1f5bc4; border-radius: 6px; padding: 4px 10px; font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; margin-bottom: 14px; }
+
+/* sign-in / sign-up: compact black panel on phones so the form is in view */
+.auth-back { font-size: 14px; color: var(--muted); font-weight: 600; }
+@media (max-width: 899px) {
+  .auth-hero { padding: 20px 20px 22px; gap: 12px; }
+  .auth-hero h1 { font-size: 28px; }
+  .auth-hero p, .auth-points { display: none; }
+}
