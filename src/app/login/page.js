@@ -33,7 +33,6 @@ export default function LoginPage() {
   return (
     <AuthShell>
       <h2>Welcome back</h2>
-      <p className="hint">New here? <a href="/signup">Create an advertiser account</a></p>
       {notice ? <p className="note">{notice}</p> : null}
       {error ? <p className="err" role="alert">{error}</p> : null}
       <form onSubmit={onSubmit} className="stack">
@@ -41,6 +40,7 @@ export default function LoginPage() {
         <label className="field"><span>Password</span><input type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required /></label>
         <button type="submit" className="btn btn-primary btn-wide" disabled={busy}>{busy ? 'Checking…' : 'Sign in'}</button>
       </form>
+      <p className="hint">New here? <a href="/signup">Create an advertiser account</a></p>
       <p className="hint">Already use Flitters? Your Flitters email and password work here too.</p>
     </AuthShell>
   )
